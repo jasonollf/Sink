@@ -20,13 +20,25 @@ jobs:
           git config user.email "actions@github.com"
 
       - name: 添加上游仓库
-        run: git remote add upstream https://github.com/ccbikai/Sink.git
+        run: git remote add upstream https://github.com/ccbikai/Sink.git || echo "Remote already exists"
 
       - name: 拉取上游更新
         run: git fetch upstream
 
-      - name: 合并到本地分支（如 main）
-        run: git merge upstream/main
+      - name: 合并上游更新（使用 rebase）
+        run: |
+          if git rebase upstream/main; then
+            echo "Rebase successful!"
+          else
+            echo "Merge conflicts detected! Please resolve manually."
+            exit 1
+          fi
 
-      - name: 推送更新到 fork
-        run: git push origin main
+      - name: 检查是否有更新
+        run: |
+          if git diff --quiet main upstream/main; then
+            echo "No updates to push."
+          else
+            echo "Updates detected. Pushing to fork..."
+            git push origin main
+          fi
