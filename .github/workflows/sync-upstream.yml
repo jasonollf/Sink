@@ -1,0 +1,32 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # 每天 UTC 时间 12:00 触发
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 拉取完整历史记录
+
+      - name: 配置 Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: 添加上游仓库
+        run: git remote add upstream https://github.com/ccbikai/Sink.git
+
+      - name: 拉取上游更新
+        run: git fetch upstream
+
+      - name: 合并到本地分支（如 main）
+        run: git merge upstream/main
+
+      - name: 推送更新到 fork
+        run: git push origin main
