@@ -2,7 +2,7 @@ name: Sync Upstream
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # 每天 UTC 时间 12:00 触发
+    - cron: '0 12 */10 * *'  # 每 10 天的 UTC 时间 12:00 触发
   workflow_dispatch:  # 允许手动触发
 
 jobs:
