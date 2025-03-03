@@ -7,8 +7,6 @@ on:
   schedule:
     - cron: '0 12 1 * *'  # 每月 1 号 UTC 时间 12:00 触发
   workflow_dispatch:
-  watch:
-    types: started
 
 jobs:
   sync_latest_from_upstream:
@@ -19,7 +17,7 @@ jobs:
     steps:
       # Step 1: run a standard checkout action
       - name: Checkout target repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: run the sync action
       - name: Sync upstream changes
